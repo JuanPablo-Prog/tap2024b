@@ -1,0 +1,32 @@
+.root{
+    -fx-background-image: url("../images/mexican.jpg");
+   -fx-alignment: center;
+    -fx-background-repeat: stretch;
+    -fx-background-size: 300 400;
+
+}
+.button{
+
+    -fx-background-color: transparent;
+    -fx-border-color: white ;
+    -fx-background-radius: 50;
+    -fx-text-fill: #01FFFF;
+    -fx-border-radius: 50;
+    -fx-padding: 3 6 6 6;
+    -fx-font: bold italic 27pt "Arial ";
+
+}
+#font-button {
+    -fx-text-fill: #2204cc;
+
+    -fx-border-color: red;
+    -fx-min-width: 100px ;
+    -fx-max-width: 1200px;
+    -fx-font: bold italic 25pt "Arial";
+    -fx-effect: dropshadow(one-pass-box, black, 80, 0.0, 20, 1);
+}
+.text-field{
+    -fx-font: bold italic 20pt "Arial";
+    -fx-text-fill: red;
+    -fx-background-color: #91d971;
+}

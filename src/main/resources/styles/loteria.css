@@ -1,0 +1,22 @@
+.root {
+    -fx-background-image: url("../images_loteria/fondo.jpg");
+    -fx-background-repeat: stretch;
+    -fx-background-size: 1000 700;
+}
+
+
+#botoncillo {
+    -fx-background-color: Blue;
+    -fx-font: bold italic 15pt "Arial ";
+    -fx-prompt-text-fill: center;
+}
+
+#lbltablilla {
+    -fx-font: bold italic 27pt "Arial ";
+    -fx-text-alignment: center;
+    -fx-background-color: white;
+    -fx-position-shape: center;
+}
+
+
+

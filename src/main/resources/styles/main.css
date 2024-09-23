@@ -1,0 +1,9 @@
+.root{
+   /* -fx-background-color: "BLUE";*/
+   /*-fx-background-image: url(https://c4.wallpaperflare.com/wallpaper/730/605/86/vaporwave-synthwave-retrowave-city-outrun-hd-wallpaper-preview.jpg);*/
+   -fx-background-image: url("https://wallpapercave.com/wp/wp8690971.jpg"), url("../images/logoitc.png");
+   -fx-background-repeat: stretch, no-repeat;
+   -fx-background-size: 1500px 800px, 400px;
+   -fx-background-position: center, center;
+
+}
