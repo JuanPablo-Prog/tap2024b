@@ -22,6 +22,14 @@ public class calculadora extends Stage {
     private StringBuilder num2 = new StringBuilder();
     private boolean esSegNum = false;
 
+    public calculadora() {
+        CrearUI();
+        this.setTitle("Calculadora");
+
+        this.setScene(escena);
+        this.show();
+    }
+
     private void CrearUI() {
         arBtns = new Button[4][4];
         txtPantalla = new TextField("0");
@@ -61,40 +69,60 @@ public class calculadora extends Stage {
         }
     }
 
-    public calculadora() {
-        CrearUI();
-        this.setTitle("Calculadorsita bonita");
-
-        this.setScene(escena);
-        this.show();
-    }
-
     private void detectarTecla(String tecla) {
-        if ("0123456789.".contains(tecla)) { // cuando ingresamos un numero o un punto decimal
+        if ("0123456789.".contains(tecla)) {
             aggNum(tecla);
-        } else if ("+-*/".contains(tecla)) { // cuando se ingresa un operador
+        } else if (tecla.equals("-") && puedeAgregarSignoNegativo()) {
+            aggNum(tecla);
+        } else if ("+-*/".contains(tecla)) {
             aggOperador(tecla);
-        } else if ("=".equals(tecla)) { // Si se presiona el boton de "="
+        } else if ("=".equals(tecla)) {
             calcResu();
         }
     }
 
+    private boolean puedeAgregarSignoNegativo() {
+        if (!esSegNum && num1.length() == 0 && opdr.isEmpty()) {
+            return true;
+        } else if (esSegNum && num2.length() == 0) {
+            return true;
+        } else {
+            return false;
+        }
+    }
+
     private void aggNum(String tecla) {
-        // Si se ingresa primero el punto decimal jaja se le pone un 0 automaticamente
+        if (tecla.equals("-")) {
+            // Solo permitimos agregar "-" al inicio del número
+            if (esSegNum) {
+                if (num2.length() == 0) {
+                    num2.append(tecla);
+                    txtPantalla.setText(num1.toString() + opdr + num2.toString());
+                }
+            } else {
+                if (num1.length() == 0) {
+                    num1.append(tecla);
+                    txtPantalla.setText(num1.toString());
+                }
+            }
+            return;
+        }
+
+        // Agregar "0." si se inicia con un punto decimal
         if (tecla.equals(".") &&
                 ((esSegNum && num2.length() == 0) ||
                         (!esSegNum && num1.length() == 0))) {
             tecla = "0.";
         }
 
-        /*ahora verificamos que el punto decimal se quiera ingresar de forma correcta :D y que no se pueda
-        ingresar mas de un punto seguidos*/
+        // Evitar múltiples puntos decimales
         if (tecla.equals(".") &&
                 ((esSegNum && num2.toString().contains(".")) ||
                         (!esSegNum && num1.toString().contains(".")))) {
             return;
         }
 
+        // Agregar dígitos al número correspondiente
         if (esSegNum) {
             num2.append(tecla);
             txtPantalla.setText(num1.toString() + opdr + num2.toString());
@@ -104,9 +132,7 @@ public class calculadora extends Stage {
         }
     }
 
-    // para que no se ingrese un operador si aun no ponemos un segundo numero jaja
-    private void  aggOperador(String tecla) {
-
+    private void aggOperador(String tecla) {
         if (!esSegNum && num1.length() > 0) {
             opdr = tecla;
             esSegNum = true;
@@ -114,14 +140,42 @@ public class calculadora extends Stage {
         }
     }
 
-    private void  calcResu() {
-        // Verificar si num2 es solo un punto decimal o comienza con un punto sin dígitos adicionales
-        if (num2.toString().equals(".") || (num2.length() == 1 && num2.charAt(0) == '.')) {
-            txtPantalla.setText("Error: .");
-            return;
+    private boolean esNumeroValido(String numStr) {
+        if (numStr == null || numStr.isEmpty()) {
+            return false;
         }
+        int len = numStr.length();
+        int i = 0;
+        if (numStr.charAt(0) == '-') {
+            if (len == 1) {
+                return false; // Solo un signo negativo no es válido
+            }
+            i = 1;
+        }
+        boolean tieneDigito = false;
+        boolean tienePuntoDecimal = false;
+        for (; i < len; i++) {
+            char c = numStr.charAt(i);
+            if (c >= '0' && c <= '9') {
+                tieneDigito = true;
+            } else if (c == '.') {
+                if (tienePuntoDecimal) {
+                    return false; // Múltiples puntos decimales
+                }
+                tienePuntoDecimal = true;
+            } else {
+                return false; // Caracter inválido
+            }
+        }
+        return tieneDigito;
+    }
 
+    private void calcResu() {
         if (num1.length() > 0 && num2.length() > 0 && !opdr.isEmpty()) {
+            if (!esNumeroValido(num1.toString()) || !esNumeroValido(num2.toString())) {
+                txtPantalla.setText("Error: Número inválido");
+                return;
+            }
             double rstdo = 0;
             double nro1 = Double.parseDouble(num1.toString());
             double nro2 = Double.parseDouble(num2.toString());
@@ -139,7 +193,7 @@ public class calculadora extends Stage {
                     break;
                 case "/":
                     if (nro2 == 0) {
-                        txtPantalla.setText("Entre 0 no amigo");
+                        txtPantalla.setText("Error: División entre 0");
                         return;
                     }
                     rstdo = nro1 / nro2;
