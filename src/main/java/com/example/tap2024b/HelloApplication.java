@@ -1,7 +1,9 @@
 package com.example.tap2024b;
 
+import com.example.tap2024b.models.Conexion;
 import com.example.tap2024b.vistas.Loteria;
 import com.example.tap2024b.vistas.calculadora;
+import com.example.tap2024b.vistas.listaClientes;
 import javafx.application.Application;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Scene;
@@ -23,7 +25,7 @@ public class HelloApplication extends Application {
 
     private MenuBar mnbPrincipal;
     private Menu menCompetencia1, menCompetencia2, menSalir;
-    private MenuItem mitCalculadora, mitLoteria;
+    private MenuItem mitCalculadora, mitLoteria, mitSpotify;
 
 
     public void CrearUI() {
@@ -31,8 +33,10 @@ public class HelloApplication extends Application {
         mitLoteria.setOnAction(actionEvent -> new Loteria());
         mitCalculadora = new MenuItem("Calculadora");
         mitCalculadora.setOnAction(actionEvent -> new calculadora());
+        mitSpotify = new Menu("Spotify");
+        mitSpotify.setOnAction(actionEvent -> new listaClientes());
         menCompetencia1 = new Menu("Competencia1");
-        menCompetencia1.getItems().addAll(mitCalculadora, mitLoteria);
+        menCompetencia1.getItems().addAll(mitCalculadora, mitLoteria, mitSpotify);
         mnbPrincipal = new MenuBar(menCompetencia1);
         bdPrincipal = new BorderPane();
         bdPrincipal.setTop(mnbPrincipal);
@@ -49,7 +53,10 @@ public class HelloApplication extends Application {
         stage.setScene(scene);
         stage.setMaximized(true);
         stage.show();
+
+        Conexion.crearConexion();
     }
+
 
     public static void main(String... args) {
         launch();

@@ -21,11 +21,11 @@ public class calculadora extends Stage {
     private StringBuilder num1 = new StringBuilder();
     private StringBuilder num2 = new StringBuilder();
     private boolean esSegNum = false;
+    private boolean resultadoMostrado = false; // Nuevo indicador para saber si se mostró un resultado
 
     public calculadora() {
         CrearUI();
         this.setTitle("Calculadora");
-
         this.setScene(escena);
         this.show();
     }
@@ -43,12 +43,8 @@ public class calculadora extends Stage {
         btnC = new Button("Clear");
         btnC.setId("font-button");
         btnC.setOnAction(actionEvent -> {
-            txtPantalla.clear();
+            resetCalculator();
             txtPantalla.setText("0");
-            num1.setLength(0);
-            num2.setLength(0);
-            opdr = "";
-            esSegNum = false;
         });
 
         vBox = new VBox(txtPantalla, gdpTeclado, btnC);
@@ -82,28 +78,24 @@ public class calculadora extends Stage {
     }
 
     private boolean puedeAgregarSignoNegativo() {
-        if (!esSegNum && num1.length() == 0 && opdr.isEmpty()) {
-            return true;
-        } else if (esSegNum && num2.length() == 0) {
-            return true;
-        } else {
-            return false;
-        }
+        // Solo permitir el signo negativo al inicio del primer número
+        return !esSegNum && num1.length() == 0 && opdr.isEmpty();
     }
 
     private void aggNum(String tecla) {
+        if (resultadoMostrado) {
+            resetCalculator();
+        }
+
         if (tecla.equals("-")) {
-            // Solo permitimos agregar "-" al inicio del número
-            if (esSegNum) {
-                if (num2.length() == 0) {
-                    num2.append(tecla);
-                    txtPantalla.setText(num1.toString() + opdr + num2.toString());
-                }
+            // Solo permitimos agregar "-" al inicio de num1
+            if (!esSegNum && num1.length() == 0 && opdr.isEmpty()) {
+                num1.append(tecla);
+                txtPantalla.setText(num1.toString());
             } else {
-                if (num1.length() == 0) {
-                    num1.append(tecla);
-                    txtPantalla.setText(num1.toString());
-                }
+                // No se permite signo negativo aquí
+                txtPantalla.setText("Error: Signo negativo no permitido");
+                resultadoMostrado = true;
             }
             return;
         }
@@ -133,10 +125,14 @@ public class calculadora extends Stage {
     }
 
     private void aggOperador(String tecla) {
-        if (!esSegNum && num1.length() > 0) {
+        if (!esSegNum && num1.length() > 0 && opdr.isEmpty()) {
             opdr = tecla;
             esSegNum = true;
             txtPantalla.setText(num1.toString() + opdr);
+        } else {
+            // No se permite ingresar otro operador
+            txtPantalla.setText("Error: Operador inválido");
+            resultadoMostrado = true;
         }
     }
 
@@ -174,6 +170,7 @@ public class calculadora extends Stage {
         if (num1.length() > 0 && num2.length() > 0 && !opdr.isEmpty()) {
             if (!esNumeroValido(num1.toString()) || !esNumeroValido(num2.toString())) {
                 txtPantalla.setText("Error: Número inválido");
+                resultadoMostrado = true;
                 return;
             }
             double rstdo = 0;
@@ -194,6 +191,7 @@ public class calculadora extends Stage {
                 case "/":
                     if (nro2 == 0) {
                         txtPantalla.setText("Error: División entre 0");
+                        resultadoMostrado = true;
                         return;
                     }
                     rstdo = nro1 / nro2;
@@ -205,6 +203,16 @@ public class calculadora extends Stage {
             num2.setLength(0);
             opdr = "";
             esSegNum = false;
+            resultadoMostrado = true; // Indicamos que se mostró un resultado
         }
+    }
+
+    private void resetCalculator() {
+        num1.setLength(0);
+        num2.setLength(0);
+        opdr = "";
+        esSegNum = false;
+        resultadoMostrado = false;
+        txtPantalla.clear();
     }
 }
