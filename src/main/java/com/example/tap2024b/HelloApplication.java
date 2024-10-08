@@ -1,6 +1,7 @@
 package com.example.tap2024b;
 
 import com.example.tap2024b.models.Conexion;
+import com.example.tap2024b.vistas.Buscaminas;
 import com.example.tap2024b.vistas.Loteria;
 import com.example.tap2024b.vistas.calculadora;
 import com.example.tap2024b.vistas.listaClientes;
@@ -25,7 +26,7 @@ public class HelloApplication extends Application {
 
     private MenuBar mnbPrincipal;
     private Menu menCompetencia1, menCompetencia2, menSalir;
-    private MenuItem mitCalculadora, mitLoteria, mitSpotify;
+    private MenuItem mitCalculadora, mitLoteria, mitSpotify, mitBuscaminas;
 
 
     public void CrearUI() {
@@ -33,10 +34,12 @@ public class HelloApplication extends Application {
         mitLoteria.setOnAction(actionEvent -> new Loteria());
         mitCalculadora = new MenuItem("Calculadora");
         mitCalculadora.setOnAction(actionEvent -> new calculadora());
+        mitBuscaminas = new MenuItem("Busca minas");
+        mitBuscaminas.setOnAction(actionEvent -> new Buscaminas());
         mitSpotify = new Menu("Spotify");
         mitSpotify.setOnAction(actionEvent -> new listaClientes());
         menCompetencia1 = new Menu("Competencia1");
-        menCompetencia1.getItems().addAll(mitCalculadora, mitLoteria, mitSpotify);
+        menCompetencia1.getItems().addAll(mitCalculadora, mitLoteria, mitSpotify,mitBuscaminas);
         mnbPrincipal = new MenuBar(menCompetencia1);
         bdPrincipal = new BorderPane();
         bdPrincipal.setTop(mnbPrincipal);
